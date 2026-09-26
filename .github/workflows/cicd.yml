@@ -1,0 +1,42 @@
+name: Node.js CI-CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  test:
+    name: CI - Test
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+
+  build:
+    name: CI - Docker Build
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Build Docker image
+        run: docker build -t my-node-project .
